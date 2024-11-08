@@ -2,11 +2,20 @@ const express = require('express');
 const puppeteer = require('puppeteer');
 const axios = require('axios');
 const { google } = require('googleapis');
+const cors = require('cors'); // Import cors package
 
 const app = express();
 const port = 5000;
 
+// CORS configuration - Allow requests from specific frontend domain
+const corsOptions = {
+  origin: 'https://meet-rust-pi.vercel.app', // Replace with your frontend domain
+  methods: ['GET', 'POST'], // Allow only GET and POST methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
+};
+
 // Middleware
+app.use(cors(corsOptions)); // Enable CORS with the specified options
 app.use(express.json());
 
 // Google OAuth 2.0 credentials
