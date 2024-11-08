@@ -9,10 +9,11 @@ const port = 5000;
 
 // CORS configuration - Allow requests from specific frontend domain
 const corsOptions = {
-  origin: 'https://meet-rust-pi.vercel.app', // Replace with your frontend domain
-  methods: ['GET', 'POST'], // Allow only GET and POST methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
-};
+    origin: 'https://meet-rust-pi.vercel.app', // Your frontend domain
+    methods: ['GET', 'POST'], // Allow only GET and POST methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
+    credentials: true // Include credentials if needed
+  };
 
 // Middleware
 app.use(cors(corsOptions)); // Enable CORS with the specified options
