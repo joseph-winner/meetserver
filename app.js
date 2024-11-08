@@ -1,3 +1,34 @@
+const express = require('express');
+const puppeteer = require('puppeteer');
+const axios = require('axios');
+const { google } = require('googleapis');
+const cors = require('cors'); // Import cors package
+
+const app = express();
+const port = 5000;
+
+// CORS configuration - Allow requests from specific frontend domain
+const corsOptions = {
+  origin: 'https://meet-rust-pi.vercel.app', // Replace with your frontend domain
+  methods: ['GET', 'POST'], // Allow only GET and POST methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
+};
+
+// Middleware
+app.use(cors(corsOptions)); // Enable CORS with the specified options
+app.use(express.json());
+
+// Google OAuth 2.0 credentials
+const CLIENT_ID = "78961766343-kroronmihe54uls5sf19esohiso62ri7.apps.googleusercontent.com";
+const CLIENT_SECRET = "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";
+const REDIRECT_URI = 'https://www.innomeet.com';
+
+// Helper function to get OAuth2 client
+function getOAuth2Client() {
+  return new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+}
+
+// Route to handle OAuth token exchange and automate Google Meet joining
 app.post('/join-meet', async (req, res) => {
     const { meetLink, authToken } = req.body;
     if (!meetLink || !authToken) {
@@ -43,3 +74,8 @@ app.post('/join-meet', async (req, res) => {
     }
   });
   
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
