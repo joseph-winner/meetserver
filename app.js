@@ -31,57 +31,28 @@ function getOAuth2Client() {
 
 // Route to handle OAuth token exchange and automate Google Meet joining
 app.post('/join-meet', async (req, res) => {
-    const { meetLink, authToken } = req.body;
-    if (!meetLink || !authToken) {
-      console.log('Invalid request: Meet link or auth token is missing');
-      return res.status(400).send('Invalid request. Meet link or auth token missing.');
+    const { authToken } = req.body;
+    if (!authToken) {
+      console.log('Invalid request: auth token is missing');
+      return res.status(400).send('Invalid request. Auth token missing.');
     }
   
     try {
-      // Initialize the OAuth client
       const oauth2Client = getOAuth2Client();
       oauth2Client.setCredentials({ access_token: authToken });
   
-      // Test authentication by calling Google API to verify token validity
-      await oauth2Client.getAccessToken();
-      console.log('OAuth token is valid');
+      // Test the token by calling a simple Google API
+      const oauth2 = google.oauth2({ auth: oauth2Client, version: 'v2' });
+      const userInfo = await oauth2.userinfo.get();
+      console.log('User Info:', userInfo.data); // This should log user information if the token is valid
   
-  
-      const browser = await puppeteer.launch({
-        headless: true,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',  // Helps reduce memory usage
-          '--disable-gpu',
-          '--no-zygote',
-          '--single-process',
-        ],
-      });
-      
-      const page = await browser.newPage();
-  
-      // Temporarily navigate to a simple URL to confirm Puppeteer is working
-      await page.goto('https://www.google.com', { waitUntil: 'networkidle2' });
-      console.log('Successfully opened Google in Puppeteer'); // Logging successful navigation to Google
-  
-      // Now try to navigate to the Google Meet link
-      await page.goto(meetLink, { waitUntil: 'networkidle2' });
-      console.log('Successfully navigated to Google Meet link');
-  
-      // Try interacting with the page (like finding the "Join now" button)
-      await page.waitForSelector('button[aria-label="Join now"]', { visible: true });
-      await page.click('button[aria-label="Join now"]');
-      console.log('Clicked "Join now" button');
-  
-      // Close the browser after joining
-      await browser.close();
-      res.status(200).send('Successfully joined the meeting');
+      res.status(200).send('OAuth token is valid and user info retrieved successfully.');
     } catch (error) {
-      console.error('Error joining Google Meet:', error.message || error); // Detailed error logging
-      res.status(500).send('Failed to join the meeting due to an error.');
+      console.error('OAuth error:', error.message, error.stack);
+      res.status(500).send('Failed to verify the token.');
     }
   });
+  
   
 
 // Start the server
