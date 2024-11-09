@@ -46,11 +46,19 @@ app.post('/join-meet', async (req, res) => {
       await oauth2Client.getAccessToken();
       console.log('OAuth token is valid');
   
-      // Initialize Puppeteer
+  
       const browser = await puppeteer.launch({
-        headless: true, // run in headless mode for better compatibility in cloud environments
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',  // Helps reduce memory usage
+          '--disable-gpu',
+          '--no-zygote',
+          '--single-process',
+        ],
       });
+      
       const page = await browser.newPage();
   
       // Temporarily navigate to a simple URL to confirm Puppeteer is working
