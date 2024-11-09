@@ -1,3 +1,4 @@
+const port = 5000;
 const puppeteer = require('puppeteer');
 
 async function testPuppeteer() {
@@ -16,3 +17,10 @@ async function testPuppeteer() {
 }
 
 testPuppeteer();
+
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+  
