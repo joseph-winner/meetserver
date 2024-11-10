@@ -16,6 +16,7 @@
     "google-auth-library": "^9.14.2",
     "googleapis": "^144.0.0",
     "nodemon": "^3.1.7",
+    "playwright": "^1.48.2",
     "puppeteer": "^23.7.1"
   }
 }
