@@ -8,7 +8,7 @@ const port = 5000;
 
 // CORS configuration - Allow requests from specific frontend domain
 const corsOptions = {
-    origin: 'https://meet-rust-pi.vercel.app', // Your frontend domain
+    origin: '*',
     methods: ['GET', 'POST'], // Allow only GET and POST methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
     credentials: true // Include credentials if needed
